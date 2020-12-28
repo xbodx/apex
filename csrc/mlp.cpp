@@ -57,7 +57,7 @@ std::vector<at::Tensor> mlp_forward(int use_bias, int activation, std::vector<at
     output_features.push_back(inputs[i + 1].size(0));
   }
 
-  auto reserved_size = get_mlp_reserved_space(batch_size, num_layers, output_features.data());
+  auto reserved_size = (int64_t)get_mlp_reserved_space(batch_size, num_layers, output_features.data());
 
   // create output/workspace tensor
   // TODO(deyuf): just get buffer?
@@ -131,10 +131,11 @@ std::vector<at::Tensor> mlp_backward(
     }
 
     auto work_size =
-        get_mlp_bp_workspace_in_bytes<scalar_t>(batch_size, num_layers, output_features.data());
+        (int64_t)get_mlp_bp_workspace_in_bytes<scalar_t>(batch_size, num_layers, output_features.data());
 
-    // auto work_space = at::empty({work_size*4}, at::kByte);
-    auto work_space = at::empty({work_size / sizeof(scalar_t)}, inputs[0].type());
+    // int64_t size_of_scalar_t = sizeof(scalar_t);
+    auto work_space = at::empty({work_size*4}, at::kByte);
+    // auto work_space = at::empty({work_size / size_of_scalar_t}, inputs[0].type());
 
     auto result = mlp_bp<scalar_t>(
         inputs[0].data_ptr<scalar_t>(),

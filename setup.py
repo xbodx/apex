@@ -183,33 +183,33 @@ if "--cuda_ext" in sys.argv:
                                    'csrc/multi_tensor_adagrad.cu',
                                    'csrc/multi_tensor_novograd.cu',
                                    'csrc/multi_tensor_lamb.cu'],
-                          extra_compile_args={'cxx': ['-O3'] + version_dependent_macros,
+                          extra_compile_args={'cxx': ['-O3'] + version_dependent_macros + ['-D_DISABLE_EXTENDED_ALIGNED_STORAGE'],
                                               'nvcc':['-lineinfo',
                                                       '-O3',
                                                       # '--resource-usage',
-                                                      '--use_fast_math'] + version_dependent_macros}))
+                                                      '--use_fast_math'] + version_dependent_macros + ['-D_DISABLE_EXTENDED_ALIGNED_STORAGE']}))
         ext_modules.append(
             CUDAExtension(name='syncbn',
                           sources=['csrc/syncbn.cpp',
                                    'csrc/welford.cu'],
-                          extra_compile_args={'cxx': ['-O3'] + version_dependent_macros,
-                                              'nvcc':['-O3'] + version_dependent_macros}))
+                          extra_compile_args={'cxx': ['-O3'] + version_dependent_macros + ['-D_DISABLE_EXTENDED_ALIGNED_STORAGE'],
+                                              'nvcc':['-O3'] + version_dependent_macros + ['-D_DISABLE_EXTENDED_ALIGNED_STORAGE']}))
 
         ext_modules.append(
             CUDAExtension(name='fused_layer_norm_cuda',
                           sources=['csrc/layer_norm_cuda.cpp',
                                    'csrc/layer_norm_cuda_kernel.cu'],
-                          extra_compile_args={'cxx': ['-O3'] + version_dependent_macros,
+                          extra_compile_args={'cxx': ['-O3'] + version_dependent_macros + ['-D_DISABLE_EXTENDED_ALIGNED_STORAGE'],
                                               'nvcc':['-maxrregcount=50',
                                                       '-O3',
-                                                      '--use_fast_math'] + version_dependent_macros}))
+                                                      '--use_fast_math'] + version_dependent_macros + ['-D_DISABLE_EXTENDED_ALIGNED_STORAGE']}))
 
         ext_modules.append(
             CUDAExtension(name='mlp_cuda',
                           sources=['csrc/mlp.cpp',
                                    'csrc/mlp_cuda.cu'],
-                          extra_compile_args={'cxx': ['-O3'] + version_dependent_macros,
-                                              'nvcc':['-O3'] + version_dependent_macros}))
+                          extra_compile_args={'cxx': ['-O3'] + version_dependent_macros + ['-D_DISABLE_EXTENDED_ALIGNED_STORAGE'],
+                                              'nvcc':['-O3'] + version_dependent_macros + ['-D_DISABLE_EXTENDED_ALIGNED_STORAGE']}))
 
 if "--bnp" in sys.argv:
     from torch.utils.cpp_extension import CUDAExtension
